@@ -3,25 +3,42 @@ include "h.bds"
 #------------------------------
 # Make directories as required
 #------------------------------
-string bamFiles = "bamFiles"
+#string bamFiles = "bamFiles"
+string bamFiles = ""
 string preqcBamFiles = "preqcBamFiles"
 string featureNo = "featureNo"
 string featureReverse = "featureReverse"
 string fastqcReport = "fastqcReport"
 string clippedFastq = "clippedFastq"
-
-if((!bamFiles.exists()) && (star)) bamFiles.mkdir()
-if((!preqcBamFiles.exists()) && (prePro)) preqcBamFiles.mkdir()
-if((!clippedFastq.exists()) && (clip)) clippedFastq.mkdir()
-if((!featureNo.exists()) && (count)) featureNo.mkdir()
-if((!featureReverse.exists()) && (count)) featureReverse.mkdir()
-if((!fastqcReport.exists()) && (fastqc)) fastqcReport.mkdir()
+#
+#if((!bamFiles.exists()) && (star)) bamFiles.mkdir()
+#if((!preqcBamFiles.exists()) && (prePro)) preqcBamFiles.mkdir()
+#if((!clippedFastq.exists()) && (clip)) clippedFastq.mkdir()
+#if((!featureNo.exists()) && (count)) featureNo.mkdir()
+#if((!featureReverse.exists()) && (count)) featureReverse.mkdir()
+#if((!fastqcReport.exists()) && (fastqc)) fastqcReport.mkdir()
 
 if(extn.isEmpty()) extn = "*fastq.gz"
 
 #------------------------------
 # Functions
 #------------------------------
+string[] getDirs(string fqDirs) {
+    
+#string fqDirs
+#if(fqDirs.isEmpty()) error "Usage: -fqDirs /path/to/fastq_directory"
+    
+    string[] dirs
+    
+    for(string dir : fqDirs.dir()){
+	string checkDir = dir.isDir()
+        if(checkDir){
+    	    dirs.add(dir)
+        }
+    }
+    return dirs
+}
+
 string{} getUniqueNames(string fqDir) {
     # Map with unique root key
     string{} uniqueNames 
@@ -89,10 +106,10 @@ string[] getSTARreads(string[] orderedList) {
     }
 }
 
-string mapSTAR(string rootName, string genomeIndex, string[] listOfReads, string[] rawReads) {
+string mapSTAR(string parentDir, string rootName, string genomeIndex, string[] listOfReads, string[] rawReads) {
 
     string rootBase = rootName.baseName()
-    string preFix = bamFiles+"/"+rootBase+"_"
+    string preFix = parentDir+bamFiles+"/"+rootBase+"_"
     string bamOut = preFix+"Aligned.out.bam"
     string reads = listOfReads.join(" ")
  

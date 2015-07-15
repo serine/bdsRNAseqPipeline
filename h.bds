@@ -17,6 +17,7 @@ help To aling your reads using STAR
 
 bool star          help flag if you like to align with STAR
 string fqDir       help path to the directory with fastq file                                   
+string fqDirs      help path to the directory with fastq directories                                   
 string genomeIndex help path to the directory with genome index for the coresponding species
 
 help To also count features using featureCounts
