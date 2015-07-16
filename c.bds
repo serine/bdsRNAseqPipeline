@@ -72,8 +72,6 @@ if( args.isEmpty() ) {
 #------------------------------
 string[] bamsList
 #string bamFile
-//string parentDir
-//if((!fqDir.isEmpty()) && (fqDirs.isEmpty())) parentDir = ''
 #if( (bamFiles.exists()) && (clip) ) bamsList = bamFiles
 
 if(!fqDirs.isEmpty()){
@@ -83,14 +81,10 @@ if(!fqDirs.isEmpty()){
     for(int i=0; i < numberOfDirs; i++){
     
         string dir = dirs[i]
-
-        if(!dir.exists()) dir.mkdir()
-        string parentDir = dir+"/bamFiles"
-        if(!parentDir.exists()) parentDir.mkdir()
-
-        string makeDirPath = fqDir+"/"+dir
+        string makeDirPath = fqDirs+"/"+dir
         string{} uniqueNames = getUniqueNames(makeDirPath)
     
+        print("$makeDirPath\n")
         for(string fqread : uniqueNames.keys()) {
             # get value for each key and break values into list
             string mapValue = uniqueNames{fqread} 
@@ -110,7 +104,7 @@ if(!fqDirs.isEmpty()){
             
             if(star && !clip) {
                 string[] reads = getSTARreads(orderedList)
-                string bamFile = mapSTAR(parentDir, fqread, genomeIndex, reads, orderedList) 
+                string bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
                 bamsList.add(bamFile)
                 #bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
             }
@@ -140,7 +134,7 @@ else {
         
         if(star && !clip) {
             string[] reads = getSTARreads(orderedList)
-            string bamFile = mapSTAR('', fqread, genomeIndex, reads, orderedList) 
+            string bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
             bamsList.add(bamFile)
             #bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
         }

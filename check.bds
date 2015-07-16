@@ -5,17 +5,17 @@ if(fqDirs.isEmpty()) error "Usage: -fqDirs /path/to/fastq_directory"
 #string[] ll
 #
 #for(string dir : fqDirs.dir()){
-#	ll.add(dir)
+#       ll.add(dir)
 #}
 #int lll = ll.size()
 ##print("$lll\n")
 #for(int i=0; i < lll; i++){
-#	string makeDir = "raw-reads"+"/"+ll[i]
+#       string makeDir = "raw-reads"+"/"+ll[i]
 #    string checkDir = makeDir.isDir()
 #    
 #    if(checkDir){
-#		for(string i : makeDir.dir("*fastq.gz")){
-#			#for(string i : makeDir.dir()){
+#               for(string i : makeDir.dir("*fastq.gz")){
+#                       #for(string i : makeDir.dir()){
 #            print("$i\n")
 #        }
 #    }
@@ -29,14 +29,13 @@ string[] getDirs(string fqDirs) {
     string[] dirs
     
     for(string dir : fqDirs.dir()){
-	string checkDir = dir.isDir()
+        string checkDir = dir.isDir()
         if(checkDir){
-    	    dirs.add(dir)
+            dirs.add(dir)
         }
     }
     return dirs
 }
-
 
 string[] dirs = getDirs(fqDirs)
 int numberOfDirs = dirs.size()
@@ -49,5 +48,8 @@ for(int i=0; i < numberOfDirs; i++){
     string preFix = ''
     string new = preFix+dir
     print("$new\n")
+    sys cd new
+    sys touch "test.txt"
+    
 }
 //string check = getDirs(fqDirs)
