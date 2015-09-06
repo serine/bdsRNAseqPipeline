@@ -1,4 +1,4 @@
-// #!/home/kirill/.bds/bds
+#!/home/kirill/.bds/bds
 
 #----------------------------------------------------------------------------------------------------
 #  Map Reads to the reference genome
@@ -45,7 +45,6 @@ if(star) {
     else error "Usage: please select A, B or C option"
     
     if((fqDirs.isEmpty()) && (fqDir.isEmpty())) error "Usage: you need to specify either -fqDir or -fqDirs"
-    //if(fqDir.isEmpty())  error "Usage: -fqDir /path/to/fastq_reads/"
     if(genomeIndex.isEmpty())  error "Usage: -genomeIndex /path/to/genome_index/"
 }
 if(count) {
@@ -84,58 +83,37 @@ if(!fqDirs.isEmpty()){
         string makeDirPath = fqDirs+"/"+dir
         string{} uniqueNames = getUniqueNames(makeDirPath)
     
-        print("$makeDirPath\n")
         for(string fqread : uniqueNames.keys()) {
             # get value for each key and break values into list
             string mapValue = uniqueNames{fqread} 
             string[] getList = mapValue.split(",")
             string[] orderedList = getOrderedList(getList)
             
-            if(clip) {
-                string reads = getNesoniReads(orderedList)
-                string[] clippedFqReads = NesoniClip(fqread, reads, orderedList)
-                
-                #if(star) {
-                #    string bamFile = mapSTAR(fqread, genomeIndex, clippedFqReads, clippedFqReads) 
-                #    bamsList.add(bamFile)
-                #}
-            
-            }
-            
-            if(star && !clip) {
+            #if(star && !clip) {
+            if(star) {
                 string[] reads = getSTARreads(orderedList)
+                #print("$reads\n")
                 string bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
                 bamsList.add(bamFile)
-                #bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
             }
         }
     }
 }
-else {
+
+if(!fqDir.isEmpty()) {
     string{} uniqueNames = getUniqueNames(fqDir)
     #loop over each key in the map
-    //for(string fqread : uniqueNames.keys()) {
     for(string fqread : uniqueNames.keys()) {
         # get value for each key and break values into list
         string mapValue = uniqueNames{fqread} 
         string[] getList = mapValue.split(",")
         string[] orderedList = getOrderedList(getList)
         
-        if(clip) {
-            string reads = getNesoniReads(orderedList)
-            string[] clippedFqReads = NesoniClip(fqread, reads, orderedList)
-            
-            #if(star) {
-            #    string bamFile = mapSTAR(fqread, genomeIndex, clippedFqReads, clippedFqReads) 
-            #    bamsList.add(bamFile)
-            #}
-        
-        }
-        
-        if(star && !clip) {
+        if(star) {
             string[] reads = getSTARreads(orderedList)
-            string bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
-            bamsList.add(bamFile)
+            print("$reads\n")
+            #string bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
+            #bamsList.add(bamFile)
             #bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
         }
     }
