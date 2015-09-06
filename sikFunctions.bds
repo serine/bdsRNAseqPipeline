@@ -1,4 +1,4 @@
-include "sickHeader.bds"
+include "sikHeader.bds"
 
 #------------------------------
 # Make directories as required
@@ -37,7 +37,7 @@ string[] getDirs(string fqDirs) {
 string{} getUniqueNames(string fqDir) {
     # Map with unique root key
     string{} uniqueNames 
-    for(string fq : fqDir.dir(extn)) {
+    for(string fq : fqDir.dirPath(extn)) {
         # make sure we have fastq files only
         string getR1Index = fq.lastIndexOf("R1") 
         if(getR1Index != -1) {

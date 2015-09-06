@@ -15,8 +15,8 @@
 # - takes care of paired end data
 #----------------------------------------------------------------------------------------------------
 
-include "sickFunctions.bds" 
-include "sickHeader.bds"
+include "sikFunctions.bds" 
+include "sikHeader.bds"
 
 #------------------------------
 # Default parameters
