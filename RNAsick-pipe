@@ -15,8 +15,8 @@
 # - takes care of paired end data
 #----------------------------------------------------------------------------------------------------
 
-include "f.bds" 
-include "h.bds"
+include "sickFunctions.bds" 
+include "sickHeader.bds"
 
 #------------------------------
 # Default parameters
@@ -111,9 +111,9 @@ if(!fqDir.isEmpty()) {
         
         if(star) {
             string[] reads = getSTARreads(orderedList)
-            print("$reads\n")
-            #string bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
-            #bamsList.add(bamFile)
+            #print("$reads\n")
+            string bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
+            bamsList.add(bamFile)
             #bamFile = mapSTAR(fqread, genomeIndex, reads, orderedList) 
         }
     }
