@@ -1,41 +1,55 @@
-string fqDirs
+string fqDir
+string fileFix
+string extn = "*fastq.gz"
+string fqRegex
+#if(fqRegex.isEmpty()) fqRegex = "_L[0-9]{3}_R[0-9]_[0-9]{3}.fastq.gz$"
+#if(fqRegex.isEmpty()) fqRegex = "_L[0-9]{3}_R[0-9].fastq.gz$"
+if(fqRegex.isEmpty()) fqRegex = "_R[0-9]_[0-9]{3}.fastq.gz$"
 
-if(fqDirs.isEmpty()) error "Usage: -fqDirs /path/to/fastq_directory"
-
-for(string i : fqDirs.dirPath("*fastq.gz")){
-    print("$i\n")
+string[] fixFileNames(string fqDir, string fileFix) {
+    string[] fixedFileNames
+    for(string fq : fqDir.dirPath(extn)) {
+        for(string line : fileFix.readLines()){
+            string[] namesList = line.split("\t")
+            string oldNamePrefix = "/"+namesList[0]+"_"
+            string newNamePrefix = "/"+namesList[1]+"_"
+            string preFixIndex = fq.indexOf(oldNamePrefix)
+            if(preFixIndex != -1){
+                string newName = fq.replace(oldNamePrefix, newNamePrefix)
+                fixedFileNames.add(newName)
+            }
+        }
+    }
+    return fixedFileNames
 }
-#
-#string[] getDirs(string fqDirs) {
-#    
-##string fqDirs
-##if(fqDirs.isEmpty()) error "Usage: -fqDirs /path/to/fastq_directory"
-#    
-#    string[] dirs
-#    
-#    for(string dir : fqDirs.dir()){
-#        string checkDir = dir.isDir()
-#        if(checkDir){
-#            dirs.add(dir)
-#        }
-#    }
-#    return dirs
-#}
-#
-#string[] dirs = getDirs(fqDirs)
-#int numberOfDirs = dirs.size()
-#
-#for(int i=0; i < numberOfDirs; i++){
-#
-#    //string makeDir = "raw-reads"+"/"+dirs[i]
-#    string dir = dirs[i]
-#    if(!dir.exists()) dir.mkdir()
-#    string preFix = ''
-#    string new = preFix+dir
-#    print("$new\n")
-#    sys cd new
-#    sys touch "test.txt"
-#    
-#}
-#print("$dirs\n")
-#print("$fqDirs\n")
+
+string[] getFqList(string fqDir){
+    string[] fqList
+    for(string fq : fqDir.dirPath(extn)){
+        fqList.add(fq)
+    }
+    return fqList
+}
+string{} getUniqueNames(string[] fastqs) {
+    # Map with unique root key
+    string{} uniqueNames
+    for(string fq : fastqs) {
+        string getR1Index = fq.lastIndexOf("R1")
+        if(getR1Index != -1) {
+            # get the root of the file name with regex
+            string[] getFile = fq.split(fqRegex)
+            string rootName = getFile[0].baseName()
+            # append to the list if it isn't in the list already
+            if(!uniqueNames.hasKey(rootName)) uniqueNames{rootName}=""
+            uniqueNames{rootName}+=fq+","
+        }
+    }
+    return uniqueNames
+}
+string[] fqList = getFqList(fqDir)
+
+string[] fixedFileNames = fixFileNames(fqDir, fileFix)
+#string{} uniqueNames = getUniqueNames(fqList)
+string{} uniqueNames = getUniqueNames(fixedFileNames)
+print("$uniqueNames\n")
+
